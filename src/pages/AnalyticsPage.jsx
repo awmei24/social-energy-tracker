@@ -1,5 +1,20 @@
 import { useMemo } from "react";
 import { getLogs } from "../hooks/storage";
+import {
+  AnalyticsContainer,
+  Section,
+  Card,
+  EnergyChart,
+  EnergyItem,
+  TypeChart,
+  ChartItem,
+  Timeline,
+  TimelineItem,
+  LogEntry,
+  Badge,
+  EmptyState,
+  PageHeader,
+} from "../styles/AnalyticsStyles";
 
 export default function AnalyticsPage() {
   const logs = getLogs();
@@ -11,18 +26,13 @@ export default function AnalyticsPage() {
     const timelineData = {};
 
     logs.forEach((log) => {
-      // Energy counts
       energyCounts[log.energy]++;
-
-      // Type counts
       typeCounts[log.type] = (typeCounts[log.type] || 0) + 1;
 
-      // Tag counts
       log.tags?.forEach((tag) => {
         tagCounts[tag] = (tagCounts[tag] || 0) + 1;
       });
 
-      // Timeline (by day)
       const date = new Date(log.timestamp).toLocaleDateString();
       if (!timelineData[date]) {
         timelineData[date] = { low: 0, mid: 0, high: 0, count: 0 };
@@ -37,24 +47,24 @@ export default function AnalyticsPage() {
   const totalLogs = logs.length;
 
   return (
-    <div className="analytics-page">
-      <div className="analytics-container">
-        <div className="analytics-header">
-          <h1>Analytics</h1>
-          <p className="total-logs">Total interactions logged: {totalLogs}</p>
-        </div>
+    <div>
+      <PageHeader>
+        <h1>Analytics</h1>
+        <p className="subtitle">Total interactions: {totalLogs}</p>
+      </PageHeader>
 
-        {totalLogs === 0 ? (
-          <div className="empty-state">
-            <p>No data yet. Start logging your interactions!</p>
-          </div>
-        ) : (
-          <div className="analytics-content">
-            {/* Energy Distribution */}
-            <section className="analytics-section">
-              <h2>Energy Levels</h2>
-              <div className="energy-chart">
-                <div className="energy-item">
+      {totalLogs === 0 ? (
+        <EmptyState>
+          <p>No data yet. Start logging your interactions!</p>
+        </EmptyState>
+      ) : (
+        <AnalyticsContainer>
+          {/* Energy Distribution */}
+          <Section>
+            <h2>Energy Levels</h2>
+            <Card>
+              <EnergyChart>
+                <EnergyItem>
                   <div className="energy-label">
                     <span className="emoji">😴</span> Drained
                   </div>
@@ -72,9 +82,9 @@ export default function AnalyticsPage() {
                       ({Math.round((stats.energyCounts.low / totalLogs) * 100)}%)
                     </span>
                   </span>
-                </div>
+                </EnergyItem>
 
-                <div className="energy-item">
+                <EnergyItem>
                   <div className="energy-label">
                     <span className="emoji">😐</span> Neutral
                   </div>
@@ -92,9 +102,9 @@ export default function AnalyticsPage() {
                       ({Math.round((stats.energyCounts.mid / totalLogs) * 100)}%)
                     </span>
                   </span>
-                </div>
+                </EnergyItem>
 
-                <div className="energy-item">
+                <EnergyItem>
                   <div className="energy-label">
                     <span className="emoji">⚡</span> Energized
                   </div>
@@ -112,120 +122,137 @@ export default function AnalyticsPage() {
                       ({Math.round((stats.energyCounts.high / totalLogs) * 100)}%)
                     </span>
                   </span>
-                </div>
-              </div>
-            </section>
+                </EnergyItem>
+              </EnergyChart>
+            </Card>
+          </Section>
 
-            {/* Interaction Types */}
-            <section className="analytics-section">
-              <h2>Interaction Types</h2>
-              <div className="type-chart">
+          {/* Interaction Types */}
+          <Section>
+            <h2>Interaction Types</h2>
+            <Card>
+              <TypeChart>
                 {Object.entries(stats.typeCounts)
                   .sort(([, a], [, b]) => b - a)
                   .map(([type, count]) => (
-                    <div key={type} className="type-item">
-                      <span className="type-name">{type}</span>
-                      <span className="type-count">{count}</span>
-                    </div>
+                    <ChartItem key={type}>
+                      <span className="label">{type}</span>
+                      <span className="count">{count}</span>
+                    </ChartItem>
                   ))}
-              </div>
-            </section>
+              </TypeChart>
+            </Card>
+          </Section>
 
-            {/* Top Tags */}
-            {Object.keys(stats.tagCounts).length > 0 && (
-              <section className="analytics-section">
-                <h2>Top Tags</h2>
-                <div className="tags-chart">
+          {/* Top Tags */}
+          {Object.keys(stats.tagCounts).length > 0 && (
+            <Section>
+              <h2>Top Tags</h2>
+              <Card>
+                <TypeChart>
                   {Object.entries(stats.tagCounts)
                     .sort(([, a], [, b]) => b - a)
                     .slice(0, 10)
                     .map(([tag, count]) => (
-                      <div key={tag} className="tag-stat">
-                        <span className="tag-name">{tag}</span>
-                        <span className="tag-count">{count}</span>
-                      </div>
+                      <ChartItem key={tag}>
+                        <span className="label">{tag}</span>
+                        <span className="count">{count}</span>
+                      </ChartItem>
                     ))}
-                </div>
-              </section>
-            )}
+                </TypeChart>
+              </Card>
+            </Section>
+          )}
 
-            {/* Recent Timeline */}
-            <section className="analytics-section">
-              <h2>Recent Activity</h2>
-              <div className="timeline">
+          {/* Recent Timeline */}
+          <Section>
+            <h2>Recent Activity</h2>
+            <Card>
+              <Timeline>
                 {Object.entries(stats.timelineData)
                   .sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
                   .slice(0, 7)
                   .map(([date, data]) => (
-                    <div key={date} className="timeline-item">
+                    <TimelineItem key={date}>
                       <div className="timeline-date">{date}</div>
                       <div className="timeline-bars">
-                        <div className="timeline-bar-group">
-                          <div className="bar low" title={`${data.low} drained`}>
-                            <span className="bar-height">{data.low > 0 ? data.low : ""}</span>
-                          </div>
-                          <div className="bar mid" title={`${data.mid} neutral`}>
-                            <span className="bar-height">{data.mid > 0 ? data.mid : ""}</span>
-                          </div>
-                          <div className="bar high" title={`${data.high} energized`}>
-                            <span className="bar-height">{data.high > 0 ? data.high : ""}</span>
-                          </div>
-                        </div>
-                        <div className="total-interactions">
-                          {data.count} interactions
-                        </div>
+                        {data.low > 0 && (
+                          <div
+                            className="bar low"
+                            style={{ height: `${(data.low / (data.low + data.mid + data.high)) * 100}%` }}
+                          />
+                        )}
+                        {data.mid > 0 && (
+                          <div
+                            className="bar mid"
+                            style={{ height: `${(data.mid / (data.low + data.mid + data.high)) * 100}%` }}
+                          />
+                        )}
+                        {data.high > 0 && (
+                          <div
+                            className="bar high"
+                            style={{ height: `${(data.high / (data.low + data.mid + data.high)) * 100}%` }}
+                          />
+                        )}
                       </div>
-                    </div>
+                      <div className="total-count">{data.count} interactions</div>
+                    </TimelineItem>
                   ))}
-              </div>
-            </section>
+              </Timeline>
+            </Card>
+          </Section>
 
-            {/* All Logs Table */}
-            <section className="analytics-section">
-              <h2>All Interactions</h2>
-              <div className="logs-table">
+          {/* All Logs */}
+          <Section>
+            <h2>All Interactions</h2>
+            <Card>
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 {logs.map((log) => (
-                  <div key={log.id} className="log-entry">
-                    <div className="log-entry-header">
-                      <span className="log-date">
-                        {new Date(log.timestamp).toLocaleDateString()} at{" "}
-                        {new Date(log.timestamp).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                      <div className="log-badges">
-                        <span className={`energy-badge ${log.energy}`}>
+                  <LogEntry key={log.id}>
+                    <div className="entry-header">
+                      <div className="date-info">
+                        <span className="date">
+                          {new Date(log.timestamp).toLocaleDateString()}
+                        </span>
+                        <span className="time">
+                          {new Date(log.timestamp).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
+                      </div>
+                      <div className="badges">
+                        <Badge type={log.energy}>
                           {log.energy === "low"
                             ? "😴 Drained"
                             : log.energy === "mid"
                             ? "😐 Neutral"
                             : "⚡ Energized"}
-                        </span>
-                        <span className="type-badge">{log.type}</span>
+                        </Badge>
+                        <Badge type="type">{log.type}</Badge>
                       </div>
                     </div>
                     {log.tags && log.tags.length > 0 && (
-                      <div className="log-tags">
+                      <div className="tags">
                         {log.tags.map((tag) => (
-                          <span key={tag} className="tag-badge">
+                          <span key={tag} className="tag">
                             {tag}
                           </span>
                         ))}
                       </div>
                     )}
                     {log.journal && (
-                      <div className="log-journal">
+                      <div className="journal">
                         <p>{log.journal}</p>
                       </div>
                     )}
-                  </div>
+                  </LogEntry>
                 ))}
               </div>
-            </section>
-          </div>
-        )}
-      </div>
+            </Card>
+          </Section>
+        </AnalyticsContainer>
+      )}
     </div>
   );
 }

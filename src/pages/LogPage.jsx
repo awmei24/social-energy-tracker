@@ -1,5 +1,20 @@
 import { useState } from "react";
 import { getLogs, saveLog, getCustomTags, saveCustomTags } from "../hooks/storage";
+import {
+  PageHeader,
+  SelectorGroup,
+  ButtonGrid,
+  OptionButton,
+  TagsContainer,
+  TagButton,
+  CustomTagInput,
+  JournalTextarea,
+  ButtonGroup,
+  BackButton,
+  PrimaryButton,
+  SecondaryButton,
+  ProgressIndicator,
+} from "../styles/FormStyles";
 
 const ENERGY_OPTIONS = [
   { label: "Drained", value: "low", emoji: "😴" },
@@ -12,40 +27,40 @@ const DEFAULT_TAGS = ["crowded", "deep convo", "draining", "fun", "meaningful"];
 
 function EnergySelector({ value, onChange }) {
   return (
-    <div className="selector-group">
+    <SelectorGroup>
       <h3>How is your energy level?</h3>
-      <div className="selector">
+      <ButtonGrid>
         {ENERGY_OPTIONS.map((opt) => (
-          <button
+          <OptionButton
             key={opt.value}
-            className={`option-btn ${value === opt.value ? "selected" : ""}`}
+            isSelected={value === opt.value}
             onClick={() => onChange(opt.value)}
           >
             <div className="emoji">{opt.emoji}</div>
             <div className="label">{opt.label}</div>
-          </button>
+          </OptionButton>
         ))}
-      </div>
-    </div>
+      </ButtonGrid>
+    </SelectorGroup>
   );
 }
 
 function TypeSelector({ value, onChange }) {
   return (
-    <div className="selector-group">
+    <SelectorGroup>
       <h3>Who were you with?</h3>
-      <div className="selector">
+      <ButtonGrid>
         {INTERACTION_TYPES.map((type) => (
-          <button
+          <OptionButton
             key={type}
-            className={`option-btn ${value === type ? "selected" : ""}`}
+            isSelected={value === type}
             onClick={() => onChange(type)}
           >
             <div className="label">{type}</div>
-          </button>
+          </OptionButton>
         ))}
-      </div>
-    </div>
+      </ButtonGrid>
+    </SelectorGroup>
   );
 }
 
@@ -70,23 +85,23 @@ function TagSelector({ tags, setTags, allTags, setAllTags }) {
   };
 
   return (
-    <div className="selector-group">
+    <SelectorGroup>
       <h3>Add tags (optional)</h3>
-      <div className="tags-container">
+      <TagsContainer>
         {allTags.map((tag) => (
-          <button
+          <TagButton
             key={tag}
-            className={`tag-btn ${tags.includes(tag) ? "selected" : ""}`}
+            isSelected={tags.includes(tag)}
             onClick={() => toggleTag(tag)}
           >
             {tag}
-          </button>
+          </TagButton>
         ))}
-      </div>
-      <div className="custom-tag-input">
+      </TagsContainer>
+      <CustomTagInput>
         <input
           type="text"
-          placeholder="Type and press Enter to add custom tag"
+          placeholder="Add custom tag..."
           value={newTagInput}
           onChange={(e) => setNewTagInput(e.target.value)}
           onKeyDown={(e) => {
@@ -95,8 +110,8 @@ function TagSelector({ tags, setTags, allTags, setAllTags }) {
             }
           }}
         />
-      </div>
-    </div>
+      </CustomTagInput>
+    </SelectorGroup>
   );
 }
 
@@ -104,31 +119,25 @@ function JournalStep({ onSubmit, onSkip, prompt }) {
   const [journalText, setJournalText] = useState("");
 
   return (
-    <div className="selector-group journal-step">
-      <h3>{prompt || "What stood out about this interaction?"}</h3>
-      <textarea
+    <SelectorGroup>
+      <h3>{prompt || "How was this interaction?"}</h3>
+      <JournalTextarea
         value={journalText}
         onChange={(e) => setJournalText(e.target.value)}
         placeholder="Write your thoughts here..."
-        className="journal-textarea"
       />
-      <div className="journal-actions">
-        <button
-          onClick={() => onSubmit(journalText)}
-          className="btn-primary"
-        >
+      <ButtonGroup>
+        <PrimaryButton onClick={() => onSubmit(journalText)}>
           Save Entry
-        </button>
-        <button onClick={onSkip} className="btn-secondary">
-          Skip
-        </button>
-      </div>
-    </div>
+        </PrimaryButton>
+        <SecondaryButton onClick={onSkip}>Skip</SecondaryButton>
+      </ButtonGroup>
+    </SelectorGroup>
   );
 }
 
 export default function LogPage({ setScreen }) {
-  const [step, setStep] = useState("energy"); // energy -> type -> tags -> journal -> done
+  const [step, setStep] = useState("energy");
   const [energy, setEnergy] = useState(null);
   const [type, setType] = useState(null);
   const [tags, setTags] = useState([]);
@@ -159,7 +168,6 @@ export default function LogPage({ setScreen }) {
       tags,
       journal: journalText || null,
     });
-    // Reset and go back to analytics
     resetForm();
     setScreen("analytics");
   };
@@ -185,72 +193,50 @@ export default function LogPage({ setScreen }) {
   };
 
   return (
-    <div className="log-page">
-      <div className="log-container">
-        <div className="log-header">
-          <h1>Log Interaction</h1>
-          <p className="progress-indicator">
-            Step {step === "energy" ? 1 : step === "type" ? 2 : step === "tags" ? 3 : 4} of 4
-          </p>
+    <div>
+      <PageHeader>
+        <h1>Log Interaction</h1>
+        <p className="subtitle">
+          Step {step === "energy" ? 1 : step === "type" ? 2 : step === "tags" ? 3 : 4} of 4
+        </p>
+      </PageHeader>
+
+      {step === "energy" && (
+        <EnergySelector value={energy} onChange={handleEnergySelect} />
+      )}
+
+      {step === "type" && (
+        <div>
+          <BackButton onClick={() => setStep("energy")}>← Back</BackButton>
+          <TypeSelector value={type} onChange={handleTypeSelect} />
         </div>
+      )}
 
-        <div className="log-content">
-          {step === "energy" && (
-            <EnergySelector value={energy} onChange={handleEnergySelect} />
-          )}
-
-          {step === "type" && (
-            <div>
-              <button
-                onClick={() => setStep("energy")}
-                className="btn-back"
-              >
-                ← Back
-              </button>
-              <TypeSelector value={type} onChange={handleTypeSelect} />
-            </div>
-          )}
-
-          {step === "tags" && (
-            <div>
-              <button
-                onClick={() => setStep("type")}
-                className="btn-back"
-              >
-                ← Back
-              </button>
-              <TagSelector
-                tags={tags}
-                setTags={setTags}
-                allTags={customTags}
-                setAllTags={setCustomTags}
-              />
-              <button
-                onClick={handleTagsNext}
-                className="btn-primary"
-              >
-                Next →
-              </button>
-            </div>
-          )}
-
-          {step === "journal" && (
-            <div>
-              <button
-                onClick={() => setStep("tags")}
-                className="btn-back"
-              >
-                ← Back
-              </button>
-              <JournalStep
-                onSubmit={handleJournalSubmit}
-                onSkip={handleJournalSkip}
-                prompt="How was this interaction?"
-              />
-            </div>
-          )}
+      {step === "tags" && (
+        <div>
+          <BackButton onClick={() => setStep("type")}>← Back</BackButton>
+          <TagSelector
+            tags={tags}
+            setTags={setTags}
+            allTags={customTags}
+            setAllTags={setCustomTags}
+          />
+          <ButtonGroup style={{ marginTop: "32px" }}>
+            <PrimaryButton onClick={handleTagsNext}>Next →</PrimaryButton>
+          </ButtonGroup>
         </div>
-      </div>
+      )}
+
+      {step === "journal" && (
+        <div>
+          <BackButton onClick={() => setStep("tags")}>← Back</BackButton>
+          <JournalStep
+            onSubmit={handleJournalSubmit}
+            onSkip={handleJournalSkip}
+            prompt="How was this interaction?"
+          />
+        </div>
+      )}
     </div>
   );
 }

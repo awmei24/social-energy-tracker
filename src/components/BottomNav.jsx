@@ -1,23 +1,25 @@
+import { NavBar, NavButton } from "../styles/BottomNavStyles";
+
 export default function BottomNav({ screen, setScreen }) {
   const tabs = [
-    { id: "log", icon: "➕", label: "Log Interaction" },
+    { id: "log", icon: "➕", label: "Log" },
     { id: "analytics", icon: "📊", label: "Analytics" },
-    { id: "journal", icon: "📓", label: "Digital Journal" },
+    { id: "journal", icon: "📓", label: "Journal" },
   ];
 
   return (
-    <nav className="bottom-nav">
+    <NavBar>
       {tabs.map((tab) => (
-        <button
+        <NavButton
           key={tab.id}
           onClick={() => setScreen(tab.id)}
-          className={`nav-btn ${screen === tab.id ? "active" : ""}`}
+          isActive={screen === tab.id}
           title={tab.label}
         >
           <span className="icon">{tab.icon}</span>
           <span className="label">{tab.label}</span>
-        </button>
+        </NavButton>
       ))}
-    </nav>
+    </NavBar>
   );
 }
