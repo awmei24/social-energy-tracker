@@ -10,12 +10,12 @@ export const NavBar = styled.nav`
   justify-content: space-around;
   align-items: center;
   background-color: ${colors.dark};
-  padding: 12px 0;
+  padding: 0px 0;
   gap: 0;
   z-index: 1000;
   box-shadow: 0 -2px 12px rgba(13, 19, 33, 0.15);
 
-  @media (max-width: 768px) {
+  @media (max-width: 390px) {
     padding: 16px 0;
   }
 `;
@@ -33,7 +33,7 @@ export const NavButton = styled.button`
   color: ${colors.light};
   transition: all 0.3s ease;
   flex: 1;
-  height: 80px;
+  height: 120px;
   position: relative;
 
   .icon {
@@ -71,7 +71,7 @@ export const NavButton = styled.button`
   `}
 
   @media (max-width: 768px) {
-    height: 70px;
+    height: 120px;
     gap: 4px;
     padding: 8px 12px;
 

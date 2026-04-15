@@ -31,4 +31,5 @@ export const ContentWrapper = styled.div`
   max-width: 600px;
   display: flex;
   flex-direction: column;
+  padding: 32px 20px; 
 `;

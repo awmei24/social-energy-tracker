@@ -4,8 +4,8 @@ import { colors } from './GlobalStyle';
 export const PageHeader = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 48px;
+  gap: 15px;
+  margin-bottom: 56px;
 
   h1 {
     font-size: 32px;
@@ -36,13 +36,17 @@ export const AnalyticsContainer = styled.div`
   max-width: 800px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+//   gap: 32px;
 `;
 
 export const Section = styled.section`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 20px;
+
+  border-top: 1px solid ${colors.light};
+  // border-bottom: 1px solid ${colors.light};
 
   h2 {
     font-size: 18px;
@@ -55,12 +59,10 @@ export const Section = styled.section`
 
 export const Card = styled.div`
   background-color: ${colors.lightest};
-  border: 1px solid ${colors.light};
-  border-radius: 8px;
-  padding: 24px;
-
+  padding: 0px;
+ 
   @media (max-width: 768px) {
-    padding: 18px;
+    padding: 0px;
   }
 `;
 
@@ -105,7 +107,7 @@ export const EnergyItem = styled.div`
       transition: width 0.3s ease;
 
       &.low {
-        background-color: #d63031;
+        background-color: #7d0000;
       }
 
       &.mid {
@@ -113,7 +115,7 @@ export const EnergyItem = styled.div`
       }
 
       &.high {
-        background-color: #00b894;
+        background-color: #0a7033;
       }
     }
   }
@@ -281,8 +283,9 @@ export const TimelineItem = styled.div`
 
 export const LogEntry = styled.div`
   background-color: rgba(240, 235, 216, 0.5);
-  border: 1px solid ${colors.light};
-  border-radius: 8px;
+  border-top: 1px solid ${colors.light};
+  border-bottom: 1px solid ${colors.light};
+//   border-radius: 8px;
   padding: 18px;
   display: flex;
   flex-direction: column;

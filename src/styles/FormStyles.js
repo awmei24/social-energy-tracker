@@ -57,11 +57,13 @@ export const SelectorGroup = styled.div`
 
 export const ButtonGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  flex-direction: column;
+  // grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 16px;
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    flex-direction: column;
+    // grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 12px;
   }
 `;

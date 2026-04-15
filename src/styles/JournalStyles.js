@@ -11,8 +11,9 @@ export const JournalContainer = styled.div`
 
 export const JournalEntryCard = styled.div`
   background-color: rgba(240, 235, 216, 0.5);
-  border: 1px solid ${colors.light};
-  border-radius: 8px;
+  border-top: 1px solid ${colors.light};
+  border-bottom: 1px solid ${colors.light};
+//   border-radius: 8px;
   padding: 24px;
   display: flex;
   flex-direction: column;

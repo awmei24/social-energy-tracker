@@ -203,7 +203,7 @@ export default function AnalyticsPage() {
           </Section>
 
           {/* All Logs */}
-          <Section>
+          {/* <Section>
             <h2>All Interactions</h2>
             <Card>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -250,7 +250,7 @@ export default function AnalyticsPage() {
                 ))}
               </div>
             </Card>
-          </Section>
+          </Section> */}
         </AnalyticsContainer>
       )}
     </div>
