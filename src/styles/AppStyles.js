@@ -15,6 +15,7 @@ export const MainContent = styled.main`
   flex: 1;
   overflow-y: auto;
   padding: 32px 20px;
+  padding-top: 120px;
   padding-bottom: 120px;
   display: flex;
   justify-content: center;
@@ -31,5 +32,5 @@ export const ContentWrapper = styled.div`
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  padding: 32px 20px; 
+  padding: 100px 20px;
 `;
