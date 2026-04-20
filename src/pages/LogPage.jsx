@@ -1,5 +1,11 @@
 import { useState } from "react";
 import { getLogs, saveLog, getCustomTags, saveCustomTags } from "../hooks/storage";
+import drainedDark from "../assets/drained-dark.svg";
+import drainedLight from "../assets/drained-lightest.svg";
+import neutralDark from "../assets/neutral-dark.svg";
+import neutralLight from "../assets/neutral-lightest.svg";
+import energizedDark from "../assets/energized-dark.svg";
+import energizedLight from "../assets/energized-lightest.svg";
 import {
   PageHeader,
   SelectorGroup,
@@ -17,13 +23,36 @@ import {
 } from "../styles/FormStyles";
 
 const ENERGY_OPTIONS = [
-  { label: "Drained", value: "low", emoji: "😴" },
-  { label: "Neutral", value: "mid", emoji: "😐" },
-  { label: "Energized", value: "high", emoji: "⚡" },
+  { label: "Drained", value: "low", iconDark: drainedDark, iconLight: drainedLight },
+  { label: "Neutral", value: "mid", iconDark: neutralDark, iconLight: neutralLight },
+  { label: "Energized", value: "high", iconDark: energizedDark, iconLight: energizedLight },
 ];
 
-const INTERACTION_TYPES = ["Work", "Friends", "Family", "Strangers", "Solo"];
-const DEFAULT_TAGS = ["crowded", "deep convo", "draining", "fun", "meaningful"];
+const INTERACTION_TYPES = ["colleagues", "friends", "family", "strangers", "solo"];
+const DEFAULT_TAGS = ["crowded", "deep convo", "draining", "", "meaningful"];
+
+const JOURNAL_PROMPTS = [
+  "What made this interaction feel the way it did?",
+  "How did your energy shift from before to after?",
+  "Was there a moment during this interaction that stood out?",
+  "What did you learn about yourself today?",
+  "Were you able to be fully present? What made that easy or hard?",
+  "What would you do differently if you could replay this interaction?",
+  "Did anything surprise you about how you felt?",
+  "How much of yourself did you share — and does that feel right?",
+  "What were you secretly hoping for going in?",
+  "Did this interaction bring you closer to or further from the other person?",
+  "What emotion showed up that you weren't expecting?",
+  "Was there something left unsaid? What was it?",
+  "What pattern in yourself did you notice today?",
+  "How did the setting or environment affect the interaction?",
+  "What are you carrying with you from this interaction?",
+  "Did you feel seen and heard? Why or why not?",
+  "What did you need during this interaction that you didn't ask for?",
+  "What drained you most — and what, if anything, refueled you?",
+  "What do you want to remember about this moment?",
+  "If a close friend had this same interaction, what would you tell them?",
+];
 
 function EnergySelector({ value, onChange }) {
   return (
@@ -36,7 +65,11 @@ function EnergySelector({ value, onChange }) {
             isSelected={value === opt.value}
             onClick={() => onChange(opt.value)}
           >
-            <div className="emoji">{opt.emoji}</div>
+            <img
+              className="emoji"
+              src={value === opt.value ? opt.iconLight : opt.iconDark}
+              alt={opt.label}
+            />
             <div className="label">{opt.label}</div>
           </OptionButton>
         ))}
@@ -120,7 +153,21 @@ function JournalStep({ onSubmit, onSkip, prompt }) {
 
   return (
     <SelectorGroup>
-      <h3>{prompt || "How was this interaction?"}</h3>
+      <h3>Take a moment to reflect</h3>
+      {prompt && (
+        <div style={{
+          background: "rgba(62, 92, 118, 0.06)",
+          borderLeft: "3px solid #3E5C76",
+          borderRadius: "0 6px 6px 0",
+          padding: "12px 16px",
+          fontStyle: "italic",
+          fontSize: "14px",
+          color: "#3E5C76",
+          lineHeight: "1.5",
+        }}>
+          {prompt}
+        </div>
+      )}
       <JournalTextarea
         value={journalText}
         onChange={(e) => setJournalText(e.target.value)}
@@ -144,6 +191,7 @@ export default function LogPage({ setScreen }) {
   const [customTags, setCustomTags] = useState(
     getCustomTags() || DEFAULT_TAGS
   );
+  const [prompt, setPrompt] = useState("");
 
   const handleEnergySelect = (value) => {
     setEnergy(value);
@@ -156,6 +204,8 @@ export default function LogPage({ setScreen }) {
   };
 
   const handleTagsNext = () => {
+    const randomPrompt = JOURNAL_PROMPTS[Math.floor(Math.random() * JOURNAL_PROMPTS.length)];
+    setPrompt(randomPrompt);
     setStep("journal");
   };
 
@@ -190,6 +240,7 @@ export default function LogPage({ setScreen }) {
     setEnergy(null);
     setType(null);
     setTags([]);
+    setPrompt("");
   };
 
   return (
@@ -233,7 +284,7 @@ export default function LogPage({ setScreen }) {
           <JournalStep
             onSubmit={handleJournalSubmit}
             onSkip={handleJournalSkip}
-            prompt="How was this interaction?"
+            prompt={prompt}
           />
         </div>
       )}

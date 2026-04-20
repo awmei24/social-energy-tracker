@@ -1,12 +1,15 @@
 import { NavBar, NavButton } from "../styles/BottomNavStyles";
+import logIcon from "../assets/log-lightest.svg";
+import analyticsIcon from "../assets/analytics-lightest.svg";
+import journalIcon from "../assets/journal-lightest.svg";
+
+const tabs = [
+  { id: "log", icon: logIcon, label: "Log" },
+  { id: "analytics", icon: analyticsIcon, label: "Analytics" },
+  { id: "journal", icon: journalIcon, label: "Journal" },
+];
 
 export default function BottomNav({ screen, setScreen }) {
-  const tabs = [
-    { id: "log", icon: "➕", label: "Log" },
-    { id: "analytics", icon: "📊", label: "Analytics" },
-    { id: "journal", icon: "📓", label: "Journal" },
-  ];
-
   return (
     <NavBar>
       {tabs.map((tab) => (
@@ -16,7 +19,7 @@ export default function BottomNav({ screen, setScreen }) {
           isActive={screen === tab.id}
           title={tab.label}
         >
-          <span className="icon">{tab.icon}</span>
+          <img className="icon" src={tab.icon} alt={tab.label} />
           <span className="label">{tab.label}</span>
         </NavButton>
       ))}

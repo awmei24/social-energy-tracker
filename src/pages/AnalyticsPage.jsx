@@ -1,4 +1,7 @@
 import { useMemo } from "react";
+import drainedDark from "../assets/drained-dark.svg";
+import neutralDark from "../assets/neutral-dark.svg";
+import energizedDark from "../assets/energized-dark.svg";
 import { getLogs } from "../hooks/storage";
 import {
   AnalyticsContainer,
@@ -66,7 +69,7 @@ export default function AnalyticsPage() {
               <EnergyChart>
                 <EnergyItem>
                   <div className="energy-label">
-                    <span className="emoji">😴</span> Drained
+                    <img className="emoji" src={drainedDark} alt="drained" /> Drained
                   </div>
                   <div className="energy-bar">
                     <div
@@ -86,7 +89,7 @@ export default function AnalyticsPage() {
 
                 <EnergyItem>
                   <div className="energy-label">
-                    <span className="emoji">😐</span> Neutral
+                    <img className="emoji" src={neutralDark} alt="neutral" /> Neutral
                   </div>
                   <div className="energy-bar">
                     <div
@@ -106,7 +109,7 @@ export default function AnalyticsPage() {
 
                 <EnergyItem>
                   <div className="energy-label">
-                    <span className="emoji">⚡</span> Energized
+                    <img className="emoji" src={energizedDark} alt="energized" /> Energized
                   </div>
                   <div className="energy-bar">
                     <div
@@ -172,32 +175,50 @@ export default function AnalyticsPage() {
                 {Object.entries(stats.timelineData)
                   .sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA))
                   .slice(0, 7)
-                  .map(([date, data]) => (
-                    <TimelineItem key={date}>
-                      <div className="timeline-date">{date}</div>
-                      <div className="timeline-bars">
-                        {data.low > 0 && (
-                          <div
-                            className="bar low"
-                            style={{ height: `${(data.low / (data.low + data.mid + data.high)) * 100}%` }}
-                          />
-                        )}
-                        {data.mid > 0 && (
-                          <div
-                            className="bar mid"
-                            style={{ height: `${(data.mid / (data.low + data.mid + data.high)) * 100}%` }}
-                          />
-                        )}
-                        {data.high > 0 && (
-                          <div
-                            className="bar high"
-                            style={{ height: `${(data.high / (data.low + data.mid + data.high)) * 100}%` }}
-                          />
-                        )}
-                      </div>
-                      <div className="total-count">{data.count} interactions</div>
-                    </TimelineItem>
-                  ))}
+                  .map(([date, data], index, arr) => {
+                    const dominant =
+                      data.high >= data.low && data.high >= data.mid
+                        ? "high"
+                        : data.low >= data.mid
+                        ? "low"
+                        : "mid";
+                    const pips = [
+                      ...Array(data.low).fill("low"),
+                      ...Array(data.mid).fill("mid"),
+                      ...Array(data.high).fill("high"),
+                    ];
+                    const visiblePips = pips.slice(0, 10);
+                    const extraCount = pips.length - visiblePips.length;
+                    const isLast = index === arr.length - 1;
+                    const formattedDate = new Date(date).toLocaleDateString([], {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                    });
+
+                    return (
+                      <TimelineItem key={date}>
+                        <div className="line-area">
+                          <div className={`dot ${dominant}`} />
+                          {!isLast && <div className="connector" />}
+                        </div>
+                        <div className="content">
+                          <div className="timeline-date">{formattedDate}</div>
+                          <div className="pips">
+                            {visiblePips.map((energy, i) => (
+                              <span key={i} className={`pip ${energy}`} />
+                            ))}
+                            {extraCount > 0 && (
+                              <span className="extra">+{extraCount}</span>
+                            )}
+                          </div>
+                          {/* <div className="total-count">
+                            {data.count} interaction{data.count !== 1 ? "s" : ""}
+                          </div> */}
+                        </div>
+                      </TimelineItem>
+                    );
+                  })}
               </Timeline>
             </Card>
           </Section>

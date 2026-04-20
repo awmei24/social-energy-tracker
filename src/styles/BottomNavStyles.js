@@ -37,7 +37,8 @@ export const NavButton = styled.button`
   position: relative;
 
   .icon {
-    font-size: 28px;
+    width: 28px;
+    height: 28px;
     display: block;
   }
 
@@ -76,7 +77,8 @@ export const NavButton = styled.button`
     padding: 8px 12px;
 
     .icon {
-      font-size: 24px;
+      width: 24px;
+      height: 24px;
     }
 
     .label {

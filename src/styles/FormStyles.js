@@ -85,7 +85,8 @@ export const OptionButton = styled.button`
   font-weight: 500;
 
   .emoji {
-    font-size: 36px;
+    width: 36px;
+    height: 36px;
     display: block;
   }
 
@@ -123,7 +124,8 @@ export const OptionButton = styled.button`
     gap: 8px;
 
     .emoji {
-      font-size: 28px;
+      width: 28px;
+      height: 28px;
     }
 
     .label {

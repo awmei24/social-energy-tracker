@@ -81,7 +81,8 @@ export const EnergyItem = styled.div`
   border-radius: 6px;
 
   .energy-label {
-    min-width: 100px;
+    width: 110px;
+    flex-shrink: 0;
     font-weight: 500;
     color: ${colors.darkest};
     display: flex;
@@ -90,7 +91,9 @@ export const EnergyItem = styled.div`
     font-size: 14px;
 
     .emoji {
-      font-size: 24px;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
     }
   }
 
@@ -121,7 +124,8 @@ export const EnergyItem = styled.div`
   }
 
   .energy-count {
-    min-width: 70px;
+    width: 70px;
+    flex-shrink: 0;
     text-align: right;
     font-weight: 600;
     color: ${colors.darkest};
@@ -140,7 +144,7 @@ export const EnergyItem = styled.div`
     padding: 10px;
 
     .energy-label {
-      min-width: 80px;
+      width: 90px;
       font-size: 13px;
     }
 
@@ -149,7 +153,7 @@ export const EnergyItem = styled.div`
     }
 
     .energy-count {
-      min-width: 60px;
+      width: 60px;
       font-size: 12px;
     }
   }
@@ -202,81 +206,105 @@ export const ChartItem = styled.div`
 export const Timeline = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 14px;
 `;
 
 export const TimelineItem = styled.div`
   display: flex;
   gap: 16px;
-  padding: 14px;
-  background-color: rgba(240, 235, 216, 0.5);
-  border-radius: 6px;
-  align-items: center;
+
+  .line-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 16px;
+  }
+
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid ${colors.lightest};
+
+    &.low { background-color: #d63031; box-shadow: 0 0 0 1px #d63031; }
+    &.mid { background-color: #fdcb6e; box-shadow: 0 0 0 1px #fdcb6e; }
+    &.high { background-color: #00b894; box-shadow: 0 0 0 1px #00b894; }
+  }
+
+  .connector {
+    width: 2px;
+    flex: 1;
+    min-height: 16px;
+    background-color: ${colors.light};
+    opacity: 0.35;
+    margin: 4px 0;
+  }
+
+  .content {
+    flex: 1;
+    padding-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
 
   .timeline-date {
-    min-width: 100px;
     font-weight: 600;
     color: ${colors.darkest};
     font-size: 13px;
+    margin-top: -1px;
   }
 
-  .timeline-bars {
-    flex: 1;
+  .pips {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     gap: 4px;
-    height: 40px;
-
-    .bar {
-      min-width: 16px;
-      border-radius: 3px;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-
-      &.low {
-        background-color: #d63031;
-      }
-
-      &.mid {
-        background-color: #fdcb6e;
-      }
-
-      &.high {
-        background-color: #00b894;
-      }
-    }
+    align-items: center;
   }
 
-  .total-count {
-    min-width: 80px;
-    text-align: right;
-    font-size: 12px;
+  .pip {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+
+    &.low { background-color: #d63031; }
+    &.mid { background-color: #fdcb6e; }
+    &.high { background-color: #00b894; }
+  }
+
+  .extra {
+    font-size: 11px;
     color: ${colors.medium};
     font-weight: 500;
   }
 
+  .total-count {
+    font-size: 12px;
+    color: ${colors.medium};
+  }
+
   @media (max-width: 768px) {
     gap: 12px;
-    padding: 12px;
+
+    .dot {
+      width: 12px;
+      height: 12px;
+    }
 
     .timeline-date {
-      min-width: 80px;
       font-size: 12px;
     }
 
-    .timeline-bars {
-      height: 32px;
-      gap: 3px;
-
-      .bar {
-        min-width: 14px;
-      }
+    .pip {
+      width: 8px;
+      height: 8px;
     }
 
-    .total-count {
-      min-width: 70px;
-      font-size: 11px;
+    .content {
+      padding-bottom: 20px;
     }
   }
 `;
