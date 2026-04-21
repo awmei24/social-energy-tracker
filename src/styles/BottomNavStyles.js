@@ -25,7 +25,7 @@ export const NavButton = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 12px;
   padding: 8px 16px;
   background-color: transparent;
   border: none;
@@ -40,6 +40,7 @@ export const NavButton = styled.button`
     width: 28px;
     height: 28px;
     display: block;
+    margin-bottom: 8px;
   }
 
   .label {
